@@ -1,0 +1,1 @@
+import{d as o,Y as a,a0 as s,a1 as t,ac as r}from"./vue-7d1786b5.js";const c={class:"page-toolbar"},n={class:"page-toolbar__actions"},d=o({__name:"PageToolbar",props:{eyebrow:{},title:{}},setup(_){return(e,l)=>(a(),s("div",c,[t("div",n,[r(e.$slots,"default")])]))}});export{d as _};

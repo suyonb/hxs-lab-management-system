@@ -2,6 +2,8 @@ import axios from 'axios';
 import { message } from 'ant-design-vue';
 import router from '../router';
 import { useAuthStore } from '../stores/auth';
+import { demoAdapter } from '../demo/adapter';
+import { isDemoMode } from '../demo/mode';
 
 declare module 'axios' {
   export interface AxiosRequestConfig {
@@ -15,7 +17,8 @@ declare module 'axios' {
 
 export const http = axios.create({
   baseURL: '',
-  timeout: 15000
+  timeout: 15000,
+  ...(isDemoMode ? { adapter: demoAdapter } : {})
 });
 
 http.interceptors.request.use((config) => {

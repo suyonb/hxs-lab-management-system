@@ -333,6 +333,27 @@ select {
   gap: 7px;
 }
 
+.demo-status {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 11px;
+  border: 1px solid color-mix(in srgb, var(--primary), transparent 64%);
+  border-radius: var(--button-radius);
+  color: var(--header-text);
+  background: color-mix(in srgb, var(--primary), transparent 88%);
+  font-size: 12px;
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.demo-reset-button {
+  width: 36px;
+  min-width: 36px;
+  padding: 0 !important;
+}
+
 .user-button {
   max-width: 180px;
   display: inline-flex;
@@ -1869,6 +1890,26 @@ select {
   margin: 0 0 6px;
   font-size: 30px;
   line-height: 1.15;
+}
+
+.login-demo-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  padding: 10px 12px;
+  border: 1px solid color-mix(in srgb, var(--primary), transparent 72%);
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--primary), transparent 93%);
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.login-demo-note svg {
+  flex: 0 0 auto;
+  color: var(--primary);
+  font-size: 16px;
 }
 
 .login-card .ant-form-item {

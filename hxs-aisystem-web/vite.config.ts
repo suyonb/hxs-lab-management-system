@@ -7,6 +7,7 @@ import { defineConfig, loadEnv } from 'vite';
 export default defineConfig(({ mode }) => {
   const apiTarget = loadEnv(mode, '.', '').VITE_API_TARGET || 'http://127.0.0.1:5120';
   return {
+  base: mode === 'demo' ? '/hxs-lab-management-system/' : '/',
   plugins: [
     vue(),
     AutoImport({

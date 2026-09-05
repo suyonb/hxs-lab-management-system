@@ -1,5 +1,6 @@
-import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
+import { createRouter, createWebHashHistory, createWebHistory, type RouteRecordRaw } from 'vue-router';
 import { getMyMenus } from '../api/system';
+import { isDemoMode } from '../demo/mode';
 import { useAuthStore } from '../stores/auth';
 import type { MenuDto } from '../types/system';
 
@@ -32,7 +33,7 @@ if (import.meta.env.DEV) {
   });
 }
 
-const router = createRouter({ history: createWebHistory(), routes });
+const router = createRouter({ history: isDemoMode ? createWebHashHistory() : createWebHistory(), routes });
 
 export function syncDynamicRoutes(menus: MenuDto[]) {
   const pages = flattenMenus(menus).filter((item) => item.menuType === 'page' && item.routePath && item.component);

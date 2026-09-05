@@ -45,6 +45,17 @@ npm run dev
 
 默认情况下，前端开发服务器将 `/api` 和 `/health` 代理到 `http://127.0.0.1:5120`。可通过 `VITE_API_TARGET` 调整目标地址。
 
+## 在线演示
+
+前端内置不依赖 API 和 Oracle 的演示模式，包含实验室、仪器、预约审批、库存、实验记录、数据推理和 2D/3D 空间数据。演示操作保存在当前浏览器，可在系统头部恢复初始数据。
+
+```bash
+cd hxs-aisystem-web
+npm run dev:demo
+```
+
+仓库的 `docs` 目录保存在线演示构建产物。首次使用时，需要进入仓库的 `Settings > Pages`，选择 `Deploy from a branch`，分支设置为 `main`，目录设置为 `/docs`。后续更新演示版时执行 `npm run build:demo`，并将 `dist` 内容同步到根目录 `docs`。
+
 ## 文档
 
 - 实施与交接状态：[`hxs-aisystem-api/HANDOFF.md`](hxs-aisystem-api/HANDOFF.md)

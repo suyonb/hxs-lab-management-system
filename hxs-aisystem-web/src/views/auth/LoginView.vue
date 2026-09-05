@@ -25,8 +25,12 @@
     <section class="login-panel">
       <a-card class="login-card" :bordered="false">
         <div class="login-card__head">
-          <p>Welcome back</p>
+          <p>{{ isDemoMode ? 'Interactive demo' : 'Welcome back' }}</p>
           <h2>实验室系统</h2>
+          <div v-if="isDemoMode" class="login-demo-note">
+            <ExperimentOutlined />
+            <span>在线交互演示，操作数据仅保存在当前浏览器</span>
+          </div>
         </div>
         <a-form layout="vertical" :model="form" @finish="submit">
           <a-form-item label="用户名" name="userName" :rules="[{ required: true, message: '请输入用户名' }]">
@@ -40,7 +44,7 @@
             </a-input-password>
           </a-form-item>
           <a-button type="primary" html-type="submit" size="large" block :loading="loading">
-            <span>进入系统</span>
+            <span>{{ isDemoMode ? '进入在线演示' : '进入系统' }}</span>
             <ArrowRightOutlined />
           </a-button>
         </a-form>
@@ -63,11 +67,12 @@
 </template>
 
 <script setup lang="ts">
-import { ArrowRightOutlined, LockOutlined, UserOutlined } from '@ant-design/icons-vue';
+import { ArrowRightOutlined, ExperimentOutlined, LockOutlined, UserOutlined } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 import { computed, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { login } from '../../api/system';
+import { isDemoMode } from '../../demo/mode';
 import { useAuthStore } from '../../stores/auth';
 import { themes, useThemeStore } from '../../stores/theme';
 

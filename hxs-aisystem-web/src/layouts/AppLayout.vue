@@ -34,6 +34,10 @@
           </div>
         </div>
         <div class="header-actions header-card">
+          <span v-if="isDemoMode" class="demo-status"><ExperimentOutlined />在线演示</span>
+          <a-popconfirm v-if="isDemoMode" title="恢复初始演示数据？" ok-text="恢复" cancel-text="取消" @confirm="resetDemo">
+            <a-button class="demo-reset-button" title="恢复演示数据"><ReloadOutlined /></a-button>
+          </a-popconfirm>
           <a-button class="theme-entry-button" @click="themeDrawerOpen = true">
             <BgColorsOutlined />
             <span>{{ activeThemeName }}</span>
@@ -132,6 +136,8 @@ import {
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { getMyMenus, getMyPermissions } from '../api/system';
+import { resetDemoState } from '../demo/adapter';
+import { isDemoMode } from '../demo/mode';
 import { resetDynamicRoutes, syncDynamicRoutes } from '../router';
 import { useAuthStore } from '../stores/auth';
 import { themes, useThemeStore, type AppTheme, type MenuMode, type ThemeKey } from '../stores/theme';
@@ -258,5 +264,10 @@ function logout() {
   resetDynamicRoutes();
   authStore.clearSession();
   router.replace('/login');
+}
+
+function resetDemo() {
+  resetDemoState();
+  window.location.reload();
 }
 </script>
