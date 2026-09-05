@@ -1,0 +1,14 @@
+namespace HxsAiSystem.Application.LabVisualization;
+public sealed record Lab3dSceneDto(Guid Id,Guid LabId,string LabName,string SceneName,string? ModelUrl,string BackgroundColor,Guid? ModelFileId,int Version,bool IsActive);
+public sealed record Lab3dNodeDto(Guid Id,string Code,string Name,string Type,decimal X,decimal Y,decimal Z,decimal ScaleX,decimal ScaleY,decimal ScaleZ,string? BusinessType,Guid? BusinessId,string Status,string? Detail);
+public sealed record Lab3dSceneDetailDto(Lab3dSceneDto Scene,List<Lab3dNodeDto> Nodes);
+public sealed record Lab3dSceneManageDto(Lab3dSceneDto Scene,int NodeCount,DateTime CreateTime,DateTime UpdateTime);
+public sealed record Lab3dModelVersionDto(Guid FileId,string FileName,long FileSize,Guid UploaderId,DateTime CreateTime,bool IsCurrent);
+public sealed record Lab3dSceneRequest(Guid LabId,string SceneName,string BackgroundColor,bool IsActive=true);
+public sealed record Lab3dNodeRequest(string Code,string Name,string Type,decimal X,decimal Y,decimal Z,decimal ScaleX=1,decimal ScaleY=1,decimal ScaleZ=1,int SortNo=0);
+public sealed record Lab3dBindingRequest(string BusinessType,Guid BusinessId);
+public sealed record Lab3dNodeStatusDto(Guid NodeId,string Status,string? Detail);
+public sealed record LabSpatialInstrumentDto(Guid Id,string Code,string Name,string Status,string? Model,string LocationName,int UpcomingBookingCount,DateTime? NextBookingTime,string? RepairStatus);
+public sealed record LabSpatialRoomDto(Guid Id,string Code,string Name,string BuildingName,string FloorName,int FloorNumber,string FullPath,int UpcomingBookingCount,int RepairingInstrumentCount,List<LabSpatialInstrumentDto> Instruments);
+public sealed record LabSpatialLabDto(Guid Id,string Code,string Name,string? Description,List<LabSpatialRoomDto> Rooms);
+public sealed record LabSpatialStatusDto(Guid NodeId,string NodeType,string Status,string Detail,int UpcomingBookingCount,int RepairingInstrumentCount,DateTime? NextBookingTime);

@@ -1,0 +1,3 @@
+export interface UnifiedApprovalDto{businessType:string;businessId:string;businessNo:string;applicantId:string;applicantName?:string|null;applyTime:string;summary:string;status:string;approverId?:string|null;approverName?:string|null;approveTime?:string|null;detailPath:string}
+export interface TrendPointDto{date:string;value:number}
+export interface DashboardSummaryDto{pendingCount:number;todayBookings:number;repairingInstruments:number;lowStockCount:number;expiringCount:number;expiredCount:number;recentExperimentCount:number;archivedExperimentCount:number;instrumentUsageTrend:TrendPointDto[];materialConsumptionTrend:TrendPointDto[]}

@@ -1,0 +1,6 @@
+export interface ExperimentInstrumentDto { id:string;instrumentId:string;instrumentName?:string|null;bookingId?:string|null;bookingNo?:string|null }
+export interface ExperimentMaterialDto { id:string;materialId:string;materialName?:string|null;requisitionId?:string|null;requisitionNo?:string|null;quantity:number;unitName?:string|null }
+export interface ExperimentRecordDto { id:string;recordType:string;content:string;recordTime:string;creatorId:string;creatorName?:string|null }
+export interface ExperimentFileDto { id:string;originalName:string;contentType:string;fileSize:number;uploaderId:string;createTime:string }
+export interface ExperimentDto { id:string;experimentNo:string;experimentName:string;groupId?:string|null;groupName?:string|null;ownerId:string;ownerName?:string|null;topicName?:string|null;purpose:string;status:string;startTime?:string|null;endTime?:string|null;archiveUserId?:string|null;archiveTime?:string|null;createTime:string;instruments:ExperimentInstrumentDto[];materials:ExperimentMaterialDto[];records:ExperimentRecordDto[];files:ExperimentFileDto[] }
+export interface ExperimentRequest { experimentName:string;groupId?:string;topicName?:string;purpose:string;instruments:Array<{instrumentId:string;bookingId?:string}>;materials:Array<{materialId:string;requisitionId?:string;quantity:number}> }

@@ -1,0 +1,13 @@
+namespace HxsAiSystem.Application.LabInstrument;
+
+public sealed record InstrumentDto(Guid Id, string InstrumentCode, string InstrumentName, Guid? CategoryId, string? CategoryName, string? Model, string? Manufacturer, Guid? SupplierId, string? SupplierName, Guid LabId, string? LabName, Guid LocationId, string? LocationName, string Status, string? Description, bool IsActive);
+public sealed record BookingDto(Guid Id, string BookingNo, Guid InstrumentId, string? InstrumentName, Guid ApplicantId, string? ApplicantName, Guid? GroupId, string? GroupName, DateTime StartTime, DateTime EndTime, string Purpose, string Status, Guid? ApproverId, DateTime? ApproveTime, string? ApproveRemark, DateTime? CancelTime, DateTime CreateTime);
+public sealed record UsageDto(Guid Id, Guid InstrumentId, string? InstrumentName, Guid? BookingId, Guid UserId, string? UserName, DateTime StartTime, DateTime EndTime, string ExperimentContent, string? Remark, DateTime CreateTime);
+public sealed record RepairDto(Guid Id, string RepairNo, Guid InstrumentId, string? InstrumentName, Guid ReporterId, string? ReporterName, string FaultDescription, string Status, Guid? ApproverId, DateTime? ApproveTime, string? Repairer, string? RepairContent, DateTime? RepairStartTime, DateTime? RepairEndTime, string? Remark, DateTime CreateTime);
+
+public sealed class InstrumentRequest { public string InstrumentCode { get; set; } = ""; public string InstrumentName { get; set; } = ""; public Guid? CategoryId { get; set; } public string? Model { get; set; } public string? Manufacturer { get; set; } public Guid? SupplierId { get; set; } public Guid LabId { get; set; } public Guid LocationId { get; set; } public string Status { get; set; } = "normal"; public string? Description { get; set; } public bool IsActive { get; set; } = true; }
+public sealed class BookingRequest { public Guid InstrumentId { get; set; } public Guid? GroupId { get; set; } public DateTime StartTime { get; set; } public DateTime EndTime { get; set; } public string Purpose { get; set; } = ""; }
+public sealed class ApprovalRequest { public string? Remark { get; set; } }
+public sealed class UsageRequest { public Guid InstrumentId { get; set; } public Guid? BookingId { get; set; } public DateTime StartTime { get; set; } public DateTime EndTime { get; set; } public string ExperimentContent { get; set; } = ""; public string? Remark { get; set; } }
+public sealed class RepairRequest { public Guid InstrumentId { get; set; } public string FaultDescription { get; set; } = ""; }
+public sealed class RepairWorkRequest { public string Repairer { get; set; } = ""; public string RepairContent { get; set; } = ""; public string? Remark { get; set; } }

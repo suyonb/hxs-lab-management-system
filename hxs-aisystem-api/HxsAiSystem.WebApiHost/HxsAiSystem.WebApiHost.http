@@ -1,0 +1,6 @@
+@HxsAiSystem.WebApiHost_HostAddress = http://127.0.0.1:5120
+
+GET {{HxsAiSystem.WebApiHost_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
