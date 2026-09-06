@@ -1,25 +1,39 @@
 :root {
-  --app-bg: #f5f7fb;
-  --panel-bg: rgba(255, 255, 255, 0.92);
+  --app-bg: #edf2f0;
+  --panel-bg: rgba(255, 255, 255, 0.96);
   --panel-solid: #ffffff;
-  --text-main: #111827;
-  --text-muted: #64748b;
-  --border-soft: rgba(148, 163, 184, 0.22);
-  --primary: #2563eb;
-  --accent: #0f766e;
-  --button-color: #2563eb;
-  --radius: 16px;
-  --button-radius: 12px;
+  --text-main: #1a2723;
+  --text-muted: #66756f;
+  --border-soft: #d9e2de;
+  --primary: #137a63;
+  --accent: #3168b7;
+  --button-color: #137a63;
+  --radius: 8px;
+  --button-radius: 6px;
   --font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
   --card-opacity: 0.92;
   --background-image: none;
   --header-text: #111827;
   --header-opacity: 0.9;
-  --sider-bg: #ffffff;
-  --sider-text: #111827;
-  --header-bg: rgba(255, 255, 255, 0.86);
-  --shadow: 0 22px 60px rgba(15, 23, 42, 0.08);
-  --hero-bg: linear-gradient(135deg, rgba(37, 99, 235, 0.16), rgba(15, 118, 110, 0.12)), #ffffff;
+  --sider-bg: #18352e;
+  --sider-text: #edf8f4;
+  --header-bg: #ffffff;
+  --shadow: 0 3px 12px rgba(21, 53, 45, 0.055);
+  --shadow-raised: 0 18px 48px rgba(21, 53, 45, 0.14);
+  --primary-soft: #eaf5f1;
+  --accent-soft: #edf3fb;
+  --warning: #b77722;
+  --warning-soft: #fcf3e7;
+  --danger: #c94f49;
+  --danger-soft: #fcedeb;
+  --violet: #7650a8;
+  --violet-soft: #f1ecf7;
+  --hero-bg: #ffffff;
+  --text-secondary: var(--text-muted);
+  --border-color: var(--border-soft);
+  --card-bg: var(--panel-solid);
+  --primary-color: var(--primary);
+  --text-color: var(--text-main);
 }
 
 :root[data-theme='personal'] {
@@ -32,8 +46,8 @@
   --primary: #b7791f;
   --accent: #7c3aed;
   --button-color: #b7791f;
-  --radius: 22px;
-  --button-radius: 999px;
+  --radius: 10px;
+  --button-radius: 7px;
   --font-family: 'SF Pro Display', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
   --card-opacity: 0.9;
   --background-image: none;
@@ -43,7 +57,16 @@
   --sider-text: #f8f3ea;
   --header-bg: rgba(23, 21, 18, 0.86);
   --shadow: 0 24px 70px rgba(0, 0, 0, 0.34);
-  --hero-bg: linear-gradient(135deg, rgba(183, 121, 31, 0.22), rgba(124, 58, 237, 0.16)), #1e1c18;
+  --shadow-raised: 0 24px 70px rgba(0, 0, 0, 0.44);
+  --primary-soft: #362b1b;
+  --accent-soft: #2c223a;
+  --warning: #d39a45;
+  --warning-soft: #372b1c;
+  --danger: #e47a73;
+  --danger-soft: #3d2422;
+  --violet: #bd93ed;
+  --violet-soft: #312541;
+  --hero-bg: #1e1c18;
 }
 
 :root[data-theme='neo'] {
@@ -56,8 +79,8 @@
   --primary: #0891b2;
   --accent: #4f46e5;
   --button-color: #0891b2;
-  --radius: 18px;
-  --button-radius: 14px;
+  --radius: 8px;
+  --button-radius: 6px;
   --font-family: 'Inter', 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
   --card-opacity: 0.94;
   --background-image: none;
@@ -67,7 +90,16 @@
   --sider-text: #e8f7fa;
   --header-bg: rgba(248, 251, 252, 0.9);
   --shadow: 0 22px 60px rgba(8, 47, 73, 0.16);
-  --hero-bg: linear-gradient(135deg, rgba(8, 145, 178, 0.16), rgba(79, 70, 229, 0.14)), #f8fbfc;
+  --shadow-raised: 0 22px 60px rgba(8, 47, 73, 0.24);
+  --primary-soft: #e8f5f7;
+  --accent-soft: #eeedfb;
+  --warning: #b77722;
+  --warning-soft: #fcf3e7;
+  --danger: #c94f49;
+  --danger-soft: #fcedeb;
+  --violet: #7650a8;
+  --violet-soft: #f1ecf7;
+  --hero-bg: #f8fbfc;
 }
 
 :root[data-theme='classic'] {
@@ -80,8 +112,8 @@
   --primary: #b91c1c;
   --accent: #475569;
   --button-color: #b91c1c;
-  --radius: 12px;
-  --button-radius: 8px;
+  --radius: 8px;
+  --button-radius: 6px;
   --font-family: 'PingFang SC', 'Microsoft YaHei', Arial, sans-serif;
   --card-opacity: 0.94;
   --background-image: none;
@@ -91,5 +123,14 @@
   --sider-text: #1f2937;
   --header-bg: rgba(255, 255, 255, 0.9);
   --shadow: 0 18px 48px rgba(39, 39, 42, 0.09);
-  --hero-bg: linear-gradient(135deg, rgba(185, 28, 28, 0.12), rgba(71, 85, 105, 0.1)), #ffffff;
+  --shadow-raised: 0 18px 48px rgba(39, 39, 42, 0.15);
+  --primary-soft: #fbeded;
+  --accent-soft: #eef1f4;
+  --warning: #b77722;
+  --warning-soft: #fcf3e7;
+  --danger: #b91c1c;
+  --danger-soft: #fbeded;
+  --violet: #7650a8;
+  --violet-soft: #f1ecf7;
+  --hero-bg: #ffffff;
 }

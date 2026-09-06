@@ -18,7 +18,8 @@
       </template>
     </a-table>
 
-    <a-modal v-model:open="editorOpen" :title="editing?'编辑试剂耗材':config.action" width="720px" @ok="save">
+    <a-modal v-model:open="editorOpen" width="720px" :ok-text="config.okText" @ok="save">
+      <template #title><AppModalTitle :title="editing ? '编辑试剂耗材' : config.action" :subtitle="config.modalSubtitle" icon="inventory" /></template>
       <a-form layout="vertical">
         <template v-if="mode==='materials'">
           <a-row :gutter="16"><a-col :span="12"><a-form-item label="物资编码"><a-input v-model:value="form.materialCode" :disabled="!!editing" /></a-form-item></a-col><a-col :span="12"><a-form-item label="物资名称"><a-input v-model:value="form.materialName" /></a-form-item></a-col></a-row>
@@ -40,14 +41,34 @@
         </template>
       </a-form>
     </a-modal>
-    <a-modal v-model:open="adjustOpen" title="调整批次库存" @ok="saveAdjust"><a-form layout="vertical"><a-form-item label="调整数量"><a-input-number v-model:value="adjustForm.quantity" style="width:100%" /></a-form-item><a-form-item label="调整原因"><a-textarea v-model:value="adjustForm.reason" :rows="3" /></a-form-item></a-form></a-modal>
-    <a-modal v-model:open="approvalOpen" title="审批领用申请" width="620px" @ok="saveApproval"><a-form layout="vertical"><div v-for="item in approvalForm.items" :key="item.itemId" class="approval-item"><span>{{item.materialName}}</span><a-input-number v-model:value="item.approvedQuantity" :min="0.0001" :max="item.requestQuantity" /><small>申请 {{number(item.requestQuantity)}}</small></div><a-form-item label="审批意见"><a-textarea v-model:value="approvalForm.remark" :rows="3" /></a-form-item></a-form></a-modal>
+    <a-modal v-model:open="adjustOpen" ok-text="确认调整" @ok="saveAdjust">
+      <template #title><AppModalTitle title="调整批次库存" subtitle="库存变动将自动写入流水，请完整填写调整原因" icon="inventory" tone="approval" /></template>
+      <a-form layout="vertical"><a-form-item label="调整数量"><a-input-number v-model:value="adjustForm.quantity" /></a-form-item><a-form-item label="调整原因"><a-textarea v-model:value="adjustForm.reason" :rows="3" /></a-form-item></a-form>
+    </a-modal>
+    <a-modal v-model:open="approvalOpen" width="620px" ok-text="通过并扣减库存" @ok="saveApproval">
+      <template #title><AppModalTitle title="审批领用申请" :subtitle="`${approvalTarget?.requisitionNo || '领用申请'} · 审批后将按批准数量扣减库存`" icon="approval" tone="approval" /></template>
+      <a-form layout="vertical">
+        <div class="requisition-approval-summary">
+          <span><small>申请人</small><strong>{{ approvalTarget?.applicantName || '-' }}</strong></span>
+          <span><small>所属课题组</small><strong>{{ approvalTarget?.groupName || '-' }}</strong></span>
+          <span><small>领用用途</small><strong>{{ approvalTarget?.purpose || '-' }}</strong></span>
+        </div>
+        <div class="requisition-approval-heading"><strong>申请物资</strong><span>批准数量不可超过申请数量</span></div>
+        <div class="requisition-approval-items">
+          <div v-for="item in approvalForm.items" :key="item.itemId" class="requisition-approval-item">
+            <span class="requisition-approval-item__material"><strong>{{ item.materialName }}</strong><small>申请 {{ number(item.requestQuantity) }}</small></span>
+            <label><small>批准数量</small><a-input-number v-model:value="item.approvedQuantity" :min="0.0001" :max="item.requestQuantity" /></label>
+          </div>
+        </div>
+        <a-form-item label="审批意见"><a-textarea v-model:value="approvalForm.remark" :rows="3" placeholder="填写本次审批意见" /></a-form-item>
+      </a-form>
+    </a-modal>
   </div>
 </template>
 <script setup lang="ts">
 import {computed,onMounted,reactive,ref,watch} from 'vue';import {DeleteOutlined,DownloadOutlined,PlusOutlined} from '@ant-design/icons-vue';import {message,Modal} from 'ant-design-vue';import PageToolbar from '../../components/PageToolbar.vue';import {inventoryApi} from '../../api/inventory';import {labFoundationApi} from '../../api/lab';import {useAuthStore} from '../../stores/auth';import type {MaterialDto} from '../../types/inventory';import type {LocationDto} from '../../types/lab';import {operationsApi} from '../../api/operations';
 const props=defineProps<{mode:'materials'|'batches'|'flows'|'requisitions'|'approvals'|'warnings'}>();const mode=computed(()=>props.mode),auth=useAuthStore();const rows=ref<any[]>([]),materials=ref<MaterialDto[]>([]),locations=ref<LocationDto[]>([]),suppliers=ref<any[]>([]),groups=ref<any[]>([]),categories=ref<any[]>([]),units=ref<any[]>([]);const loading=ref(false),editorOpen=ref(false),editing=ref<any>(null),adjustOpen=ref(false),adjustTarget=ref<any>(null),approvalOpen=ref(false),approvalTarget=ref<any>(null);const form=reactive<any>({items:[]}),adjustForm=reactive({quantity:0,reason:''}),approvalForm=reactive<any>({items:[],remark:''});
-const configs:any={materials:{title:'试剂耗材',action:'新增物资'},batches:{title:'批次库存',action:'登记入库'},flows:{title:'库存流水',action:'刷新'},requisitions:{title:'领用申请',action:'提交申请'},approvals:{title:'领用审批',action:'刷新'},warnings:{title:'库存预警',action:'刷新'}};const config=computed(()=>configs[mode.value]);const createCodes:any={materials:'lab:material:manage',batches:'lab:stock:in',requisitions:'lab:requisition:create'};const canCreate=computed(()=>['flows','approvals','warnings'].includes(mode.value)||has(createCodes[mode.value]));
+const configs:any={materials:{title:'试剂耗材',action:'新增物资',okText:'保存物资',modalSubtitle:'录入物资档案、存放位置与库存预警基线'},batches:{title:'批次库存',action:'登记入库',okText:'确认入库',modalSubtitle:'登记批次、有效期、入库数量及价格信息'},flows:{title:'库存流水',action:'刷新',okText:'保存',modalSubtitle:'查看物资库存变动轨迹'},requisitions:{title:'领用申请',action:'提交申请',okText:'提交申请',modalSubtitle:'选择领用物资和数量并说明实验用途'},approvals:{title:'领用审批',action:'刷新',okText:'保存',modalSubtitle:'核对申请明细并确认实际批准数量'},warnings:{title:'库存预警',action:'刷新',okText:'保存',modalSubtitle:'查看库存与有效期预警'}};const config=computed(()=>configs[mode.value]);const createCodes:any={materials:'lab:material:manage',batches:'lab:stock:in',requisitions:'lab:requisition:create'};const canCreate=computed(()=>['flows','approvals','warnings'].includes(mode.value)||has(createCodes[mode.value]));
 const exportType=computed(()=>mode.value==='materials'?'materials':mode.value==='flows'?'stock-flows':['requisitions','approvals'].includes(mode.value)?'requisitions':'');
 const maps:any={materials:[{title:'编码',dataIndex:'materialCode'},{title:'名称',dataIndex:'materialName'},{title:'类型',key:'type'},{title:'规格',dataIndex:'specification'},{title:'单位',dataIndex:'unitName'},{title:'库存',dataIndex:'currentStock'},{title:'最低库存',dataIndex:'minStock'},{title:'位置',dataIndex:'storageLocationName'},{title:'状态',key:'active',width:80},{title:'操作',key:'actions',width:90}],batches:[{title:'物资',dataIndex:'materialName'},{title:'批次号',dataIndex:'batchNo'},{title:'入库数量',dataIndex:'inQuantity'},{title:'可用库存',dataIndex:'availableQuantity'},{title:'有效期',dataIndex:'expiryDate'},{title:'预警',key:'warning',width:90},{title:'操作',key:'actions',width:90}],flows:[{title:'流水号',dataIndex:'flowNo'},{title:'物资',dataIndex:'materialName'},{title:'批次',dataIndex:'batchNo'},{title:'类型',dataIndex:'flowType'},{title:'变动量',key:'quantity'},{title:'变动前',dataIndex:'beforeQuantity'},{title:'变动后',dataIndex:'afterQuantity'},{title:'操作人',dataIndex:'operatorName'},{title:'备注',dataIndex:'remark'}],requisitions:[{title:'申请单号',dataIndex:'requisitionNo'},{title:'申请人',dataIndex:'applicantName'},{title:'课题组',dataIndex:'groupName'},{title:'明细',key:'items'},{title:'用途',dataIndex:'purpose'},{title:'状态',key:'status',width:90},{title:'操作',key:'actions',width:90}],approvals:[{title:'申请单号',dataIndex:'requisitionNo'},{title:'申请人',dataIndex:'applicantName'},{title:'明细',key:'items'},{title:'用途',dataIndex:'purpose'},{title:'状态',key:'status',width:90},{title:'操作',key:'actions',width:140}],warnings:[{title:'编码',dataIndex:'materialCode'},{title:'物资',dataIndex:'materialName'},{title:'当前库存',dataIndex:'currentStock'},{title:'最低库存',dataIndex:'minStock'},{title:'临期批次',dataIndex:'expiringBatchCount'},{title:'过期批次',dataIndex:'expiredBatchCount'},{title:'预警',key:'warning',width:90}]};const columns=computed(()=>maps[mode.value]);
 const warningText:any={normal:'正常',low:'低库存',expiring:'临期',expired:'已过期'},warningColor:any={normal:'green',low:'orange',expiring:'gold',expired:'red'};const statusText:any={pending:'待审核',approved:'已通过',rejected:'已驳回',cancelled:'已取消'},statusColor:any={pending:'gold',approved:'green',rejected:'red',cancelled:'default'};const materialTypes=[{label:'试剂',value:'reagent'},{label:'耗材',value:'consumable'}];const materialOptions=computed(()=>materials.value.filter(x=>x.isActive).map(x=>({label:`${x.materialCode} · ${x.materialName}（库存 ${number(x.currentStock)}）`,value:x.id}))),categoryOptions=computed(()=>categories.value.map(x=>({label:x.itemLabel,value:x.id}))),unitOptions=computed(()=>units.value.map(x=>({label:x.itemLabel,value:x.id}))),supplierOptions=computed(()=>suppliers.value.map(x=>({label:x.supplierName,value:x.id}))),locationOptions=computed(()=>flatten(locations.value).map(x=>({label:x.locationName,value:x.id}))),groupOptions=computed(()=>groups.value.map(x=>({label:x.groupName,value:x.id})));

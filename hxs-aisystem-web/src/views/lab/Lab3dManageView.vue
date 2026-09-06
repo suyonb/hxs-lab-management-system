@@ -76,7 +76,8 @@
       </section>
     </div>
 
-    <a-modal v-model:open="sceneOpen" :title="editingScene?'编辑场景':'新增场景'" width="600px" @ok="saveScene">
+    <a-modal v-model:open="sceneOpen" width="600px" ok-text="保存场景" @ok="saveScene">
+      <template #title><AppModalTitle :title="editingScene ? '编辑场景' : '新增场景'" subtitle="配置实验室空间场景及默认展示背景" icon="spatial" tone="spatial" /></template>
       <a-form layout="vertical" :model="sceneForm">
         <a-form-item label="所属实验室" required><a-select v-model:value="sceneForm.labId" :options="labOptions" /></a-form-item>
         <a-form-item label="场景名称" required><a-input v-model:value="sceneForm.sceneName" :maxlength="100" /></a-form-item>
@@ -84,7 +85,8 @@
       </a-form>
     </a-modal>
 
-    <a-modal v-model:open="nodeOpen" :title="editingNode?'编辑空间节点':'新增空间节点'" width="760px" @ok="saveNode">
+    <a-modal v-model:open="nodeOpen" width="760px" ok-text="保存节点" @ok="saveNode">
+      <template #title><AppModalTitle :title="editingNode ? '编辑空间节点' : '新增空间节点'" subtitle="设置节点坐标、空间尺寸并绑定现有业务数据" icon="spatial" tone="spatial" /></template>
       <a-form layout="vertical" :model="nodeForm">
         <a-row :gutter="16"><a-col :span="10"><a-form-item label="节点编码" required><a-input v-model:value="nodeForm.code" /></a-form-item></a-col><a-col :span="10"><a-form-item label="节点名称" required><a-input v-model:value="nodeForm.name" /></a-form-item></a-col><a-col :span="4"><a-form-item label="排序"><a-input-number v-model:value="nodeForm.sortNo" :min="0" /></a-form-item></a-col></a-row>
         <a-form-item label="节点类型"><a-segmented v-model:value="nodeForm.type" :options="nodeTypes" /></a-form-item>

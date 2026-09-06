@@ -20,7 +20,8 @@
       </template>
     </a-table>
 
-    <a-modal v-model:open="modalOpen" :title="editing ? '编辑角色' : '新增角色'" @ok="save">
+    <a-modal v-model:open="modalOpen" ok-text="保存角色" @ok="save">
+      <template #title><AppModalTitle :title="editing ? '编辑角色' : '新增角色'" subtitle="定义角色身份与使用状态" icon="role" /></template>
       <a-form layout="vertical" :model="form">
         <a-form-item label="角色编码"><a-input v-model:value="form.roleCode" /></a-form-item>
         <a-form-item label="角色名称"><a-input v-model:value="form.roleName" /></a-form-item>
@@ -29,7 +30,8 @@
       </a-form>
     </a-modal>
 
-    <a-modal v-model:open="menuOpen" title="菜单与操作权限" width="620px" @ok="saveMenus">
+    <a-modal v-model:open="menuOpen" width="620px" ok-text="保存授权" @ok="saveMenus">
+      <template #title><AppModalTitle title="菜单与操作权限" subtitle="目录、页面及页面内操作均可独立授权" icon="approval" tone="approval" /></template>
       <div class="permission-legend">
         <span><FolderOutlined /> 目录</span><span><FileOutlined /> 页面</span><span class="permission-legend__action"><ControlOutlined /> 操作权限</span>
       </div>

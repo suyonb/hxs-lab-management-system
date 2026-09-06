@@ -20,19 +20,35 @@ const antTheme = computed(() => ({
     colorInfo: themeStore.currentTheme.primary,
     borderRadius: themeStore.currentTheme.radius,
     borderRadiusLG: themeStore.currentTheme.radius,
-    borderRadiusSM: Math.max(8, themeStore.currentTheme.radius - 8),
-    controlHeight: 36,
+    borderRadiusSM: Math.max(4, themeStore.currentTheme.radius - 2),
+    controlHeight: 34,
+    controlHeightLG: 38,
+    fontSize: 13,
     fontFamily: themeStore.currentTheme.fontFamily,
-    colorText: themeStore.activeThemeKey === 'personal' ? '#f8f3ea' : '#111827',
-    colorTextSecondary: themeStore.activeThemeKey === 'personal' ? '#c9bca9' : '#64748b',
+    colorText: themeStore.activeThemeKey === 'personal' ? '#f8f3ea' : '#1a2723',
+    colorTextSecondary: themeStore.activeThemeKey === 'personal' ? '#c9bca9' : '#66756f',
     colorBgContainer: themeStore.activeThemeKey === 'personal' ? '#1e1c18' : '#ffffff',
-    colorBorder: themeStore.activeThemeKey === 'personal' ? '#4b4338' : '#d9dee7'
+    colorBorder: themeStore.activeThemeKey === 'personal' ? '#4b4338' : '#d9e2de'
   },
   components: {
     Button: {
       colorPrimary: themeStore.currentTheme.buttonColor,
       borderRadius: themeStore.currentTheme.buttonRadius,
-      borderRadiusLG: themeStore.currentTheme.buttonRadius
+      borderRadiusLG: themeStore.currentTheme.buttonRadius,
+      controlHeight: 34,
+      paddingInline: 13,
+      fontWeight: 600
+    },
+    Table: {
+      headerBg: themeStore.activeThemeKey === 'personal' ? '#29251f' : '#f5f8f7',
+      headerColor: themeStore.activeThemeKey === 'personal' ? '#d7cab9' : '#596862',
+      borderColor: themeStore.activeThemeKey === 'personal' ? '#4b4338' : '#d9e2de',
+      cellPaddingBlock: 10,
+      cellPaddingInline: 12
+    },
+    Modal: {
+      titleFontSize: 16,
+      titleLineHeight: 1.4
     }
   }
 }));

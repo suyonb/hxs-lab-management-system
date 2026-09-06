@@ -31,7 +31,8 @@
       </template>
     </a-table>
 
-    <a-modal v-model:open="modalOpen" :title="editing ? '编辑菜单' : '新增菜单'" width="720px" class="menu-editor-modal" @ok="save">
+    <a-modal v-model:open="modalOpen" width="720px" class="menu-editor-modal" ok-text="保存菜单" @ok="save">
+      <template #title><AppModalTitle :title="editing ? '编辑菜单' : '新增菜单'" subtitle="配置菜单层级、页面组件与访问权限" icon="menu" /></template>
       <a-form layout="vertical" :model="form" class="menu-editor-form">
         <a-form-item label="上级菜单"><a-tree-select v-model:value="form.parentId" allow-clear :tree-data="menuOptions" placeholder="选择上级菜单" /></a-form-item>
         <a-row :gutter="16">

@@ -1,10 +1,10 @@
 <template>
   <a-layout class="shell">
-    <a-layout-sider v-model:collapsed="collapsed" class="shell__sider" :width="248" :collapsed-width="76">
+    <a-layout-sider v-model:collapsed="collapsed" class="shell__sider" :width="224" :collapsed-width="66">
       <div class="brand" :class="{ 'brand--collapsed': collapsed }">
         <a-dropdown :trigger="['click']">
           <button class="brand__user" type="button" title="用户菜单">
-            <span class="brand__mark"><UserOutlined /></span>
+            <span class="brand__mark">{{ userInitial }}</span>
             <span v-if="!collapsed" class="brand__text">
               <strong>{{ currentUser?.displayName || currentUser?.userName }}</strong>
               <span>{{ currentUser?.userName || '当前登录用户' }}</span>
@@ -48,7 +48,8 @@
         <router-view />
       </a-layout-content>
     </a-layout>
-    <a-drawer v-model:open="themeDrawerOpen" title="主题细化" placement="right" width="400" class="theme-drawer">
+    <a-drawer v-model:open="themeDrawerOpen" placement="right" width="400" class="theme-drawer">
+      <template #title><AppModalTitle title="主题细化" subtitle="调整系统主题、菜单形态与界面字体" icon="theme" /></template>
       <div class="theme-editor">
         <section class="theme-editor__section theme-editor__section--first">
           <h3>主题风格</h3>
@@ -130,8 +131,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   PictureOutlined,
-  ReloadOutlined,
-  UserOutlined
+  ReloadOutlined
 } from '@ant-design/icons-vue';
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -165,6 +165,7 @@ const fontOptions = [
 
 const visibleMenus = computed(() => menuTree.value.filter((item) => item.menuType !== 'button'));
 const currentUser = computed(() => authStore.currentUser);
+const userInitial = computed(() => (currentUser.value?.displayName || currentUser.value?.userName || 'H').trim().slice(0, 1).toUpperCase());
 const activeThemeKey = computed({
   get: () => themeStore.activeThemeKey,
   set: (value) => {
@@ -198,10 +199,14 @@ watch(
   () => route.path,
   (path) => {
     selectedKeys.value = [path];
-    openKeys.value = findOpenKeys(menuTree.value, path);
+    openKeys.value = collapsed.value ? [] : findOpenKeys(menuTree.value, path);
   },
   { immediate: true }
 );
+
+watch(collapsed, (value) => {
+  openKeys.value = value ? [] : findOpenKeys(menuTree.value, route.path);
+});
 
 function go(info: { key: string | number }) {
   const key = String(info.key);
@@ -216,7 +221,7 @@ async function loadMenus() {
   menuTree.value = menus;
   syncDynamicRoutes(menus);
   authStore.setPermissions(permissions);
-  openKeys.value = findOpenKeys(menuTree.value, route.path);
+  openKeys.value = collapsed.value ? [] : findOpenKeys(menuTree.value, route.path);
 }
 
 function updateColor(key: 'primary' | 'accent' | 'buttonColor' | 'headerBg' | 'headerText', event: Event) {

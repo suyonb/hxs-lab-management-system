@@ -38,7 +38,8 @@
       </section>
     </div>
 
-    <a-modal v-model:open="editorOpen" :title="`${editing ? '编辑' : '新增'}${activeLabel}`" width="680px" @ok="save">
+    <a-modal v-model:open="editorOpen" width="680px" :ok-text="`保存${activeLabel}`" @ok="save">
+      <template #title><AppModalTitle :title="`${editing ? '编辑' : '新增'}${activeLabel}`" :subtitle="activeModalSubtitle" :icon="activeTab === 'dicts' ? 'dictionary' : activeTab === 'groups' ? 'members' : 'organization'" /></template>
       <a-form layout="vertical" :model="form">
         <template v-if="activeTab === 'labs'">
           <a-row :gutter="16"><a-col :span="12"><a-form-item label="实验室编码"><a-input v-model:value="form.code" :disabled="!!editing" /></a-form-item></a-col><a-col :span="12"><a-form-item label="实验室名称"><a-input v-model:value="form.name" /></a-form-item></a-col></a-row>
@@ -60,11 +61,15 @@
       </a-form>
     </a-modal>
 
-    <a-modal v-model:open="membersOpen" title="课题组成员" width="620px" :footer="null">
+    <a-modal v-model:open="membersOpen" width="620px" :footer="null">
+      <template #title><AppModalTitle title="课题组成员" :subtitle="memberGroup ? `${memberGroup.groupName} · 维护成员及组内身份` : '维护课题组成员及组内身份'" icon="members" /></template>
       <div v-if="canManage" class="inline-create"><a-select v-model:value="memberForm.userId" placeholder="选择用户" :options="userOptions" /><a-select v-model:value="memberForm.memberRole" :options="memberRoles" /><a-button type="primary" @click="addMember">添加</a-button></div>
       <a-list bordered :data-source="members"><template #renderItem="{ item }"><a-list-item><a-list-item-meta :title="item.displayName || item.userName" :description="item.memberRole" /><a-button v-if="canManage" type="text" danger @click="removeMember(item.id)"><DeleteOutlined /></a-button></a-list-item></template></a-list>
     </a-modal>
-    <a-modal v-model:open="dictItemOpen" :title="editingItem ? '编辑字典项' : '新增字典项'" @ok="saveDictItem"><a-form layout="vertical"><a-form-item label="字典值"><a-input v-model:value="itemForm.itemValue" :disabled="!!editingItem" /></a-form-item><a-form-item label="显示名称"><a-input v-model:value="itemForm.itemLabel" /></a-form-item><a-form-item label="排序"><a-input-number v-model:value="itemForm.sortNo" :min="0" /></a-form-item><a-checkbox v-model:checked="itemForm.isActive">启用</a-checkbox></a-form></a-modal>
+    <a-modal v-model:open="dictItemOpen" ok-text="保存字典项" @ok="saveDictItem">
+      <template #title><AppModalTitle :title="editingItem ? '编辑字典项' : '新增字典项'" :subtitle="selectedDict ? `${selectedDict.dictName} · 配置系统可选值` : '配置系统业务可选值'" icon="dictionary" /></template>
+      <a-form layout="vertical"><a-form-item label="字典值"><a-input v-model:value="itemForm.itemValue" :disabled="!!editingItem" /></a-form-item><a-form-item label="显示名称"><a-input v-model:value="itemForm.itemLabel" /></a-form-item><a-form-item label="排序"><a-input-number v-model:value="itemForm.sortNo" :min="0" /></a-form-item><a-checkbox v-model:checked="itemForm.isActive">启用</a-checkbox></a-form>
+    </a-modal>
   </div>
 </template>
 
@@ -85,6 +90,7 @@ const activeTab = ref(props.initialTab); const loading = ref(false); const labs 
 const editorOpen = ref(false); const editing = ref<any>(null); const selectedDict = ref<DictTypeDto>(); const membersOpen = ref(false); const memberGroup = ref<LabGroupDto>(); const members = ref<GroupMemberDto[]>([]); const dictItemOpen = ref(false); const editingItem = ref<DictItemDto>();
 const form = reactive<any>({}); const memberForm = reactive({ userId: undefined as string | undefined, memberRole: 'member' }); const itemForm = reactive({ itemValue: '', itemLabel: '', sortNo: 0, isActive: true });
 const activeLabel = computed(() => ({ labs: '实验室', locations: '位置', groups: '课题组', suppliers: '供应商', dicts: '字典类型' }[activeTab.value] ?? '基础数据'));
+const activeModalSubtitle = computed(() => ({ labs: '维护实验室编码、负责人和使用状态', locations: '建立楼栋、楼层、房间与区域的空间层级', groups: '维护课题组归属、负责人和基础资料', suppliers: '记录供应商联系人及常用联系方式', dicts: '维护业务字典编码、名称和启用状态' }[activeTab.value] ?? '维护实验室基础数据'));
 const tableScroll = { x: 900, y: 'calc(100vh - 360px)' }; const labOptions = computed(() => labs.value.map(x => ({ label: x.labName, value: x.id }))); const userOptions = computed(() => users.value.map(x => ({ label: x.displayName || x.userName, value: x.id })));
 const locationOptions = computed(() => mapTree(locations.value)); const locationTypes = [{ label: '楼栋', value: 'building' }, { label: '房间', value: 'room' }, { label: '区域', value: 'area' }, { label: '柜体', value: 'cabinet' }]; const memberRoles = [{ label: '负责人', value: 'leader' }, { label: '成员', value: 'member' }];
 const labColumns = [{ title: '编码', dataIndex: 'labCode' }, { title: '名称', dataIndex: 'labName' }, { title: '负责人', dataIndex: 'managerName' }, { title: '说明', dataIndex: 'description' }, { title: '状态', key: 'isActive', width: 90 }, { title: '操作', key: 'actions', width: 150 }];

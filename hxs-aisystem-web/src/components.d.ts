@@ -36,6 +36,7 @@ declare module 'vue' {
     AModal: typeof import('ant-design-vue/es')['Modal']
     APopconfirm: typeof import('ant-design-vue/es')['Popconfirm']
     APopover: typeof import('ant-design-vue/es')['Popover']
+    AppModalTitle: typeof import('./components/AppModalTitle.vue')['default']
     AProgress: typeof import('ant-design-vue/es')['Progress']
     ARangePicker: typeof import('ant-design-vue/es')['RangePicker']
     ARow: typeof import('ant-design-vue/es')['Row']

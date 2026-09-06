@@ -18,7 +18,8 @@
         </template>
       </template>
     </a-table>
-    <a-modal v-model:open="modalOpen" :title="editing ? '编辑组织' : '新增组织'" @ok="save">
+    <a-modal v-model:open="modalOpen" ok-text="保存组织" @ok="save">
+      <template #title><AppModalTitle :title="editing ? '编辑组织' : '新增组织'" subtitle="维护部门层级、编码与启用状态" icon="organization" /></template>
       <a-form layout="vertical" :model="form">
         <a-form-item label="上级组织"><a-tree-select v-model:value="form.parentId" allow-clear :tree-data="treeOptions" /></a-form-item>
         <a-form-item label="组织名称"><a-input v-model:value="form.orgName" /></a-form-item>

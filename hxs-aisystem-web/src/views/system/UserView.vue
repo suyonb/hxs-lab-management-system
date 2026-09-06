@@ -22,7 +22,8 @@
       </template>
     </a-table>
 
-    <a-modal v-model:open="modalOpen" :title="editing ? '编辑用户' : '新增用户'" @ok="save">
+    <a-modal v-model:open="modalOpen" ok-text="保存用户" @ok="save">
+      <template #title><AppModalTitle :title="editing ? '编辑用户' : '新增用户'" subtitle="维护登录身份、组织归属与基础联系方式" icon="user" /></template>
       <a-form layout="vertical" :model="form">
         <a-form-item label="所属组织"><a-tree-select v-model:value="form.orgId" allow-clear :tree-data="orgOptions" /></a-form-item>
         <a-form-item v-if="!editing" label="用户名"><a-input v-model:value="form.userName" /></a-form-item>
@@ -34,7 +35,8 @@
       </a-form>
     </a-modal>
 
-    <a-modal v-model:open="roleOpen" title="分配角色" @ok="saveRoles">
+    <a-modal v-model:open="roleOpen" ok-text="保存分配" @ok="saveRoles">
+      <template #title><AppModalTitle title="分配角色" subtitle="角色将决定用户可访问的菜单与操作范围" icon="role" /></template>
       <a-checkbox-group v-model:value="selectedRoleIds" class="check-list">
         <a-checkbox v-for="role in roles" :key="role.id" :value="role.id">{{ role.roleName }}（{{ role.roleCode }}）</a-checkbox>
       </a-checkbox-group>

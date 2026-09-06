@@ -28,7 +28,8 @@
       </template>
     </a-table>
 
-    <a-modal v-model:open="editorOpen" :title="editing ? '编辑仪器' : config.createText" width="720px" @ok="save">
+    <a-modal v-model:open="editorOpen" width="720px" :ok-text="config.okText" @ok="save">
+      <template #title><AppModalTitle :title="editing ? '编辑仪器' : config.createText" :subtitle="config.modalSubtitle" :icon="mode === 'repairs' ? 'maintenance' : 'experiment'" /></template>
       <a-form layout="vertical">
         <template v-if="mode === 'instruments'">
           <a-row :gutter="16"><a-col :span="12"><a-form-item label="仪器编号"><a-input v-model:value="form.instrumentCode" :disabled="!!editing" /></a-form-item></a-col><a-col :span="12"><a-form-item label="仪器名称"><a-input v-model:value="form.instrumentName" /></a-form-item></a-col></a-row>
@@ -58,7 +59,10 @@
       </a-form>
     </a-modal>
 
-    <a-modal v-model:open="workOpen" :title="workAction === 'start' ? '开始维修' : '完成维修'" @ok="saveWork"><a-form layout="vertical"><a-form-item label="维修人员"><a-input v-model:value="workForm.repairer" /></a-form-item><a-form-item label="维修内容"><a-textarea v-model:value="workForm.repairContent" :rows="4" /></a-form-item><a-form-item label="备注"><a-input v-model:value="workForm.remark" /></a-form-item></a-form></a-modal>
+    <a-modal v-model:open="workOpen" :ok-text="workAction === 'start' ? '开始维修' : '完成维修'" @ok="saveWork">
+      <template #title><AppModalTitle :title="workAction === 'start' ? '开始维修' : '完成维修'" subtitle="登记维修执行人员、处理内容和结果备注" icon="maintenance" tone="approval" /></template>
+      <a-form layout="vertical"><a-form-item label="维修人员"><a-input v-model:value="workForm.repairer" /></a-form-item><a-form-item label="维修内容"><a-textarea v-model:value="workForm.repairContent" :rows="4" /></a-form-item><a-form-item label="备注"><a-input v-model:value="workForm.remark" /></a-form-item></a-form>
+    </a-modal>
   </div>
 </template>
 
@@ -81,7 +85,7 @@ const rows=ref<any[]>([]), instruments=ref<InstrumentDto[]>([]), labs=ref<any[]>
 const loading=ref(false), editorOpen=ref(false), editing=ref<any>(null), workOpen=ref(false), workTarget=ref<any>(null), workAction=ref<'start'|'complete'>('start');
 const form=reactive<any>({}), workForm=reactive({repairer:'',repairContent:'',remark:''});
 const mode=computed(()=>props.mode);
-const configs:any={instruments:{eyebrow:'Assets',title:'仪器台账',createText:'新增仪器'},bookings:{eyebrow:'Bookings',title:'我的仪器预约',createText:'申请预约'},approvals:{eyebrow:'Approvals',title:'预约审批',createText:'刷新列表'},usages:{eyebrow:'Usage',title:'仪器使用记录',createText:'登记使用'},repairs:{eyebrow:'Repairs',title:'设备报修与维修',createText:'提交报修'}};
+const configs:any={instruments:{eyebrow:'Assets',title:'仪器台账',createText:'新增仪器',okText:'保存仪器',modalSubtitle:'录入仪器台账、实验室归属与运行状态'},bookings:{eyebrow:'Bookings',title:'我的仪器预约',createText:'申请预约',okText:'提交预约',modalSubtitle:'选择仪器与连续时间段并说明使用用途'},approvals:{eyebrow:'Approvals',title:'预约审批',createText:'刷新列表',okText:'保存',modalSubtitle:'核对预约申请与仪器可用时间'},usages:{eyebrow:'Usage',title:'仪器使用记录',createText:'登记使用',okText:'保存记录',modalSubtitle:'关联预约并登记实际使用时间与实验内容'},repairs:{eyebrow:'Repairs',title:'设备报修与维修',createText:'提交报修',okText:'提交报修',modalSubtitle:'选择故障仪器并完整描述异常情况'}};
 const config=computed(()=>configs[mode.value]);
 const exportType=computed(()=>mode.value==='instruments'?'instruments':mode.value==='bookings'||mode.value==='approvals'?'bookings':'');
 const createPermissions:any={instruments:'lab:instrument:manage',bookings:'lab:booking:create',usages:'lab:usage:create',repairs:'lab:repair:create'};
